@@ -68,9 +68,11 @@ app.post('/add-member-to-organization', authMiddleware, (req, res) => {
     res.json({message: 'Member added to organization successfully' });
 })
 app.post('/Board', authMiddleware, (req, res) => {
+    const userID = req.userID;
 
 })
 app.post('/issue', authMiddleware, (req, res) => {
+    const userID = req.userID;
 })
 
 //read endpoints
