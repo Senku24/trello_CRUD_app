@@ -1,4 +1,4 @@
-const mongoos = require("mongoose");
+const mongoose = require("mongoose");
 mongoose.connect("");
 
 //schemas and models

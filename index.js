@@ -1,5 +1,6 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
 const { authMiddleware } = require("./middleware");
 
 const { userModel, organizationModel } = require("./models");
@@ -21,7 +22,7 @@ const BOARDS = [];
 const ISSUES = [];
 
 //create endpoints
-app.post('/signup', (req, res) => {
+app.post('/signup', async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
 
@@ -37,7 +38,7 @@ app.post('/signup', (req, res) => {
     res.status(201).json({ message: 'User created successfully' , id: newUser._id });
 })
 
-app.post('/signin', (req, res) => {
+app.post('/signin', async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
 
@@ -72,7 +73,7 @@ app.post('/add-member-to-organization', authMiddleware, async (req, res) => {
     const memberUsername = req.body.memberUsername;
 
     const organization = await organizationModel.findOne({ _id: organizationID });
-    if (!organization || organization.admin !== userID) {
+    if (!organization || organization.admin.toString() !== userID) {
         return res.status(404).json({ message: 'Organization not found or not an admin' });
     }
     const memberUser = await userModel.findOne({ username: memberUsername }  );
@@ -103,7 +104,7 @@ app.get('/organizations', authMiddleware, async (req, res) => {
     const organizationID = req.query.organizationID;
 
     const organization = await organizationModel.findOne({ _id: organizationID });
-    if (!organization || organization.admin !== userID) {
+    if (!organization || organization.admin.toString() !== userID) {
         return res.status(404).json({ message: 'Organization not found or not an admin' });
     }
     res.json({ organization: organization});
@@ -125,7 +126,7 @@ app.delete('/members', authMiddleware, async (req, res) => {
     const memberUsername = req.body.memberUsername;
 
     const organization = await organizationModel.findOne({ _id: organizationID });
-    if (!organization || organization.admin !== userID) {
+    if (!organization || organization.admin.toString() !== userID) {
         return res.status(404).json({ message: 'Organization not found' });
     }
     const memberUser = await userModel.findOne({ username: memberUsername });
