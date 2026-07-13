@@ -1,5 +1,8 @@
 const mongoose = require("mongoose");
-mongoose.connect("");
+const dotenv = require("dotenv");
+dotenv.config();
+
+mongoose.connect(process.env.MONGO_URI);
 
 //schemas and models
 const userSchema = new mongoose.Schema({
